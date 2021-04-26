@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
-const bodyParser = require("body-parser");
 const flash = require('connect-flash');
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -27,20 +26,20 @@ app.set('views', './views');
 app.set('view engine', 'ejs');
 
 // Images
-app.use(express.static(path.join(__dirname, 'public')))
+// app.use(express.static(path.join(__dirname, 'public')))
 
 // Code for cookie-parser Middleware used to parse the cookies attached to client requests. 
 // Provided by and credited to https://www.npmjs.com/package/cookie-parser
 app.use(cookieParser());
 
-// Body-parser Middleware for node JS provided by and credited to https://www.npmjs.com/package/body-parser
+// EDIT 4/21/21: Body-Parser has been deprecated so we will use the express module parser provided to us. 
 // Used to parse incoming bodies of text in a middleware before storing within the database.
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(express.urlencoded({extended:false}));
 
 // Code for Express Session Middleware provided by https://github.com/expressjs/session
 // Used to handle the session's application session's middleware.
 app.use(session({
-    secret: 'keyboard cat',
+    secret: 'ejrewaea',
     resave: false,
     saveUninitialized: false,
 }));
@@ -50,8 +49,9 @@ app.use(session({
 app.use(flash());
 
 // Code for Passport JS authentication middleware - Passport is provided by and credited to http://www.passportjs.org/docs/username-password/
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.initialize()); 
+app.use(passport.session()); // Stores the variables to be persisted across the entire user session
+// Works hand in hand with user.use session() above 
 
 // Setting up Passport Authentication 
     // Seralizes the user into the session
@@ -76,7 +76,7 @@ app.use(passport.session());
             if (!user) {
                 return done(null, false, { message: "No user has that Email!" });
             }
-            // Checking the database to match the password entered to the password saved in the databse
+            // Checking the database using local var. "user" to match the password entered to the password saved in the databse
             user.checkPassword(password, function (err, isMatch) {
                 if (err) { return done(err); }
                 if (isMatch) {
@@ -87,18 +87,6 @@ app.use(passport.session());
             });
         });
     }));
-
-
-//middleware to check if user is logged in
-var ensureAuth = function ensureAuthenticated(req, res, next){
-    if(req.isAuthenticated()){
-        next();
-    } else {
-        req.flash("info", "You must be logged in to see this page");
-        res.redirect("/login");
-    }
-}
-module.exports = {ensureAuthenticated: ensureAuth}
 
 // Home Route
 app.use("/", require("./routes"));

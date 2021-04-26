@@ -18,8 +18,9 @@
         <li><a href="/about">About</a></li>
 
         <!-- Provides access to more pages to those authenticated users -->
+        <!-- While the user is logged in, they are able to access the Profile & Game page -->
         <% if(currentUser != null) { %>
-            <li><a href="#">Our Game</a></li> 
+            <li><a href="/game">Our Game</a></li> 
             <li><a href="#">Profile</a></li>
             <li><a href="#">Welcome <%= currentUser.username %>!</a></li>
             <li><a href="/logout">Logout</a></li>
@@ -31,19 +32,19 @@
         </ul>
     </div>
 </div>
- 
+</body>
+
 <div class="container">
-  
-<%  if(error && error.length > 0) { %>
-    <div class="alert alert-danger" role="alert">
-      <%= error %>
-    </div>
-<% } %>
 
-<%  if(info && info.length > 0) { %>
-    <div class="alert alert-info" role="alert">
-      <%= info %>
-    </div>
-<% } %>
-
+    <%  if(error && error.length > 0) { %>
+        <div class="alert-danger" role="alert">
+          <%= error %>
+        </div>
+    <% } %>
+    
+    <%  if(info && info.length > 0) { %>
+        <div class="alert-info" role="alert">
+          <%= info %>
+        </div>
+    <% } %>
 

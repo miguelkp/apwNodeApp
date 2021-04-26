@@ -1,3 +1,5 @@
+// Directory of our routes
+
 const express = require("express");
 const passport = require("passport");
 
@@ -6,8 +8,6 @@ const passport = require("passport");
 const User = require("../models/user");
 
 const router = express.Router();
-
-// List of Routes Below
 
 // Default Index Route
 router.get("/", function (req, res) {
@@ -28,6 +28,11 @@ router.get("/about", function (req, res) {
 router.get("/login", function (req, res) {
    res.render("login"); // Renders a view of the Login form Page
 });
+
+// Game Page
+router.get("/game", function (req, res) {
+   res.render("game");
+})
 
 // Logout Function via Passport JS
 // Upon clicking the "logout" function
@@ -66,9 +71,7 @@ router.post("/register", function (req, res, next) {
          password: password,
          email: email
       });
-
       newUser.save(next); // Saves user by adding them to the database.
-
    });
 
    // Used for user authentication during login
