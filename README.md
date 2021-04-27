@@ -1,7 +1,12 @@
 # apwNodeApp
 Repository for APW Semester long NodeJS / Express project
 
-To install, please clone this repository onto your local computer
-CD INTO THE FILE ITSELF
-Run npm install
-Run node app.js 
+Step 1: To install, please clone this repository onto your local computer
+
+Step 2: CD into the apwNodeApp File
+
+Step 3: Run npm install to install all dependencies neccesary
+
+Step 4: Run node app.js 
+
+Step 5: type in localhost:3000 into your browser
