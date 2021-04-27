@@ -9,4 +9,7 @@ Step 3: Run npm install to install all dependencies neccesary
 
 Step 4: Run node app.js 
 
-Step 5: type in localhost:3000 into your browser
+Step 5: type in localhost:3000 into your browser 
+
+Step 6: NOTE: IMPORTANT
+Make sure you SIGN UP & LOG IN to view hidden pages (Game & Leaderboard)
