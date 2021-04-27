@@ -26,7 +26,7 @@ app.set('views', './views');
 app.set('view engine', 'ejs');
 
 // Images
-// app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Code for cookie-parser Middleware used to parse the cookies attached to client requests. 
 // Provided by and credited to https://www.npmjs.com/package/cookie-parser
