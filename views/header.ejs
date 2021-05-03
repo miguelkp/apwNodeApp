@@ -21,7 +21,7 @@
         <!-- While the user is logged in, they are able to access the Profile & Game page -->
         <% if(currentUser != null) { %>
             <li><a href="/game">Our Game</a></li> 
-            <li><a href="#">Leaderboard</a></li>
+            <li><a href="/leaderboard">Leaderboard</a></li>
             <li><a href="#">Welcome <%= currentUser.username %>!</a></li>
             <li><a href="/logout">Logout</a></li>
         <%}%>
