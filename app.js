@@ -11,7 +11,8 @@ const User = require('./models/user');
 
 // Connection to database
 const url = 'mongodb://127.0.0.1:27017/projectDB'
-mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true });
+//mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/apwNodeApp');
 mongoose.createConnection(url, { useNewUrlParser: true });
 
 // Checks connection to DB

@@ -1,0 +1,60 @@
+<!-- Author of this page: Swadesh Malneedi-->
+<%- include("header"); -%>
+
+<h1>Leaderboard</h1>
+<br>
+<p> You can find the highest score here! </p>
+<body>
+<style>
+    #container {
+	width: 600px;
+	height: auto;
+}
+
+.row {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 40px;
+	border-bottom: 1px solid #AFAFAF;
+}
+
+.name {
+	position: relative;
+	display: inline-block;
+	width: 75%;
+	line-height: 45px;
+}
+
+.score {
+	position: relative;
+	display: inline-block;
+	width: 25%;
+}
+</style>
+
+    <div id="container">
+    <div class="row">
+        <div class="name">HighScore</div><div class="score">750</div>
+    </div>
+    
+    <div class="row">
+        <div class="name">#2</div><div class="score">690</div>
+    </div>
+    
+    <div class="row">
+        <div class="name">#3</div><div class="score">575</div>
+    </div>
+    
+    <div class="row">
+        <div class="name">#4</div><div class="score">445</div>
+    </div>
+    
+    <div class="row">
+        <div class="name">#5</div><div class="score">386</div>
+    </div>
+</div>
+
+</body>
+
+<%- include ("footer"); -%>

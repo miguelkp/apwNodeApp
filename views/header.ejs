@@ -8,20 +8,20 @@
 </head>
  
 <body>
-<div class="navbar navbar-default navbar-dynamic-top" role="navigation">
+<div class="navbar navbar-default navbar-static" role="navigation">
      <div class="container">
         <div class="navbar-header">
         <a class="navbar-brand" href="/">Node JS Semester Project</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-        <li><a href="/home">Home</a></li>
+        <!-- <li><a href="/home">Home</a></li> -->
         <li><a href="/about">About</a></li>
 
         <!-- Provides access to more pages to those authenticated users -->
         <!-- While the user is logged in, they are able to access the Profile & Game page -->
         <% if(currentUser != null) { %>
             <li><a href="/game">Our Game</a></li> 
-            <li><a href="#">Profile</a></li>
+            <li><a href="/leaderboard">Leaderboard</a></li>
             <li><a href="#">Welcome <%= currentUser.username %>!</a></li>
             <li><a href="/logout">Logout</a></li>
         <%}%>
