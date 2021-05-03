@@ -7,9 +7,15 @@ Step 2: CD into the apwNodeApp File
 
 Step 3: Run npm install to install all dependencies neccesary
 
-Step 4: Run node app.js 
+Step 4: To import the database collections, input:
 
-Step 5: type in localhost:3000 into your browser 
+  mongorestore --nsInclude=apwNodeApp.users
 
-Step 6: NOTE: IMPORTANT
+  mongorestore --nsInclude=apwNodeapp.scores
+
+Step 5: Run node app.js 
+
+Step 6: type in localhost:3000 into your browser 
+
+Step 7: NOTE: IMPORTANT
 Make sure you SIGN UP & LOG IN to view hidden pages (Game & Leaderboard)
