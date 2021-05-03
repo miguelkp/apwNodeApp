@@ -1,3 +1,5 @@
+// Author of Page: Miguel Patel
+
 // Required Variables
 const express = require('express');
 const mongoose = require('mongoose');
