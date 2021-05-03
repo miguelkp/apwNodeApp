@@ -1,3 +1,5 @@
+// Author of Page: Miguel Patel
+
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 
