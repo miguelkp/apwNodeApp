@@ -7,255 +7,203 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <style>
         canvas {
-            position: absolute;
             border: 1px solid black;
             background-color: lightgray;
-            padding-top: 100px;
-        }
-
-        html, body {
-            position:fixed;
-            top: 0;
-            bottom:0;
-            left:0;
-            right:0;
         }
     </style>
     
-
-    <script>
-        //variables that handle the player character, the walls of collision, the scoreboard counter, and the sound that plays for rocket soun (in that order)
-        var gmeRocket;
-        var collisionObject = [];
-        var scoreBoard;
-        var rocketSound;
-        
-        //begins the game
-        function beginGame(){
-            //this calls the gameFrame function, opens a canvas and populates it
-            gameFrame.start();
-            //creates a component for the player character
-            gmeRocket = new component(65, 65, "/images/rocketsitting.png", 400, 0, "image");
-            //creates a component for the score board
-            scoreBoard = new component("50px", "Comic Sans", "black", 750, 50, "text");
-            //creates a sound for the rocket moving sound effect
-            rocketSound = new sound("/images/rocket.mp3")
-        }
-        
-        //variable for the HTML canvas play area, also uses the interval counter to update the game frame    
-        var gameFrame = {
-            canvas : document.createElement("canvas"),
-            start : function(){
-                this.canvas.width = 2000;
-                this.canvas.height = 1000;
-                this.context = this.canvas.getContext("2d");
-                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-                this.frameFlag = 0;
-                this.interval = setInterval(updateGameFrame, 20);
-            },
-            clear : function(){
-                this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
-            },
-            stop : function(){
-                clearInterval(this.interval);
-            }
-        }
-        
-        //function which counts what frame the game is on
-        function intervalcounter(x) {
-            if ((gameFrame.frameFlag / x) % 1 == 0) {return true;}
-            return false;
-        }
-        
-        //component class, alls to build out either text or images
-        function component (width, height, color, x, y, type){
-            this.width = width;
-            this.height = height;
-            this.speedX = 0;
-            this.speedY = 0;
-            this.x = x;
-            this.y = y;
-            this.type = type;
-            if(type=="image"){
-                this.image = new Image();
-                this.image.src = color;
-            }
-            this.update = function(){
-                ctx = gameFrame.context;
-                if(this.type == "text"){
-                    ctx.font = this.width + " " + this.height;
-                    ctx.fillStyle = color;
-                    ctx.fillText(this.text, this.x, this.y);
-                } else if(type == "image"){
-                    ctx.drawImage(this.image, this.x, this.y,this.width, this.height);
-                }
-                else{
-                     ctx.fillStyle = color;
-                     ctx.fillRect(this.x, this.y, this.width, this.height);   
-                }
-            }//handles movement
-            this.move = function(){
-                this.x += this.speedX;
-                this.y += this.speedY;
-            }//calculates collision
-            this.crashWith = function(otherobj) {
-                var firstleft = this.x;
-                var firstright = this.x + (this.width);
-                var firsttop = this.y;
-                var firstbottom = this.y + (this.height);
-                var secondleft = otherobj.x;
-                var secondright = otherobj.x + (otherobj.width);
-                var secondtop = otherobj.y;
-                var secondbottom = otherobj.y + (otherobj.height);
-                var crash = true;
-                if ((firstbottom < secondtop) ||
-                (firsttop > secondbottom) ||
-                (firstright < secondleft) ||
-                (firstleft > secondright)) {
-                    crash = false;
-                }
-                return crash;
-            }
-        }
-        
-        //function to update the game area, also controls collision, if collision occurs game stops
-        function updateGameFrame(){
-            var x, y;
-            for (i = 0; i < collisionObject.length; i+=1){
-                if (gmeRocket.crashWith(collisionObject[i])) {
-                    gameFrame.stop();
-                    alert("GAME OVER");
-                    document.location.reload();
-                    return;
-                } 
-            }
-            gameFrame.clear();
-            gameFrame.frameFlag += 1;
-            //builds out the collision objects and handles the creation of gaps between them
-            if (gameFrame.frameFlag == 1 || intervalcounter(150)){
-                x = gameFrame.canvas.width;
-                upperValue = 400;
-                lowerValue = 10;
-                height = Math.floor(Math.random()*(upperValue-lowerValue+1)+lowerValue);
-                upperGap = 400;
-                lowerGap = 200;
-                gap = Math.floor(Math.random()*(upperGap-lowerGap+1)+lowerGap);
-                collisionObject.push(new component(height, 20, "red", 0, 800));
-                collisionObject.push(new component(x - height - gap, 20, "blue", height + gap, 800));
-            }
-            for ( i = 0; i < collisionObject.length; i += 1){
-                collisionObject[i].y += -1;
-                collisionObject[i].update();
-            }
-            scoreBoard.text = "Score: " + gameFrame.frameFlag;
-            scoreBoard.update();
-            gmeRocket.move();
-            gmeRocket.update();
-        
-        }
-        
-        //sound class for allowing sound on movement
-        function sound(src) {
-          this.sound = document.createElement("audio");
-          this.sound.src = src;
-          this.sound.setAttribute("preload", "auto");
-          this.sound.setAttribute("controls", "none");
-          this.sound.style.display = "none";
-          document.body.appendChild(this.sound);
-          this.play = function(){
-            this.sound.volume = .01;
-            this.sound.play();
-          }
-          this.stop = function(){
-            this.sound.pause();
-          }
-        }
-        
-        //Four following functions handle what the player character must do on the canvas if called, Fifth function handles what happens when nothing is being pressed
-        function upwards(){
-            gmeRocket.image.src = "/images/rocketmoving.png";
-            gmeRocket.speedY -= 2;
-            rocketSound.play();
-        }
-        function downwards(){
-            gmeRocket.image.src = "/images/rocketmoving.png";
-            gmeRocket.speedY += 2;
-            rocketSound.play();
-        }
-        function lefthand(){
-            gmeRocket.image.src = "/images/rocketmoving.png";
-            gmeRocket.speedX -= 2;
-            rocketSound.play();
-        }
-        function righthand(){
-            gmeRocket.image.src = "/images/rocketmoving.png";
-            gmeRocket.speedX += 2;
-            rocketSound.play();
-        } 
-        function pause(){
-            gmeRocket.image.src = "/images/rocketsitting.png";
-            gmeRocket.speedX = 0;
-            gmeRocket.speedY = 0;
-            rocketSound.stop();
-        }
-        
-        let keysPressed = {};
-        document.addEventListener('keydown', (event) => {
-           keysPressed[event.key] = true;
-        
-           if (event.key == 'ArrowLeft') {
-               lefthand();
-           }
-        
-           if (event.key == 'ArrowRight') {
-               righthand();
-           }
-        
-           if (event.key == 'ArrowUp') {
-               upwards();
-           }
-        
-           if (event.key == 'ArrowDown') {
-               downwards();
-           }
-        });
-        
-        document.addEventListener('keyup', (event) => {
-           delete keysPressed[event.key];
-        });
-
-        var keys = {};
-        window.addEventListener("keydown",
-            function(e){
-            keys[e.code] = true;
-            switch(e.code){
-                case "ArrowUp": case "ArrowDown": case "ArrowLeft": case "ArrowRight":
-                case "Space": e.preventDefault(); break;
-                default: break; // do not block other keys
-            }
-        },
-        false);
-        window.addEventListener('keyup',
-            function(e){
-            keys[e.code] = false;
-        },
-        false);
-        </script>
-         
  </head>
     
 <!--begins the game when the body is loaded-->     
 <body onload="beginGame()">
+
+    
+<script>
+//variables that handle the player character, the walls of collision, the scoreboard counter, and the sound that plays for rocket soun (in that order)
+var gmeRocket;
+var collisionObject = [];
+var scoreBoard;
+var rocketSound;
+
+//begins the game
+function beginGame(){
+    //this calls the gameFrame function, opens a canvas and populates it
+    gameFrame.start();
+    //creates a component for the player character
+    gmeRocket = new component(65, 65, "/images/rocketsitting.png", 400, 0, "image");
+    //creates a component for the score board
+    scoreBoard = new component("50px", "Comic Sans", "black", 750, 50, "text");
+    //creates a sound for the rocket moving sound effect
+    rocketSound = new sound("/images/rocket.mp3")
+}
+
+//variable for the HTML canvas play area, also uses the interval counter to update the game frame    
+var gameFrame = {
+    canvas : document.createElement("canvas"),
+    start : function(){
+        this.canvas.width = 1000;
+        this.canvas.height = 800;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameFlag = 0;
+        this.interval = setInterval(updateGameFrame, 20);
+    },
+    clear : function(){
+        this.context.clearRect(0,0,this.canvas.width, this.canvas.height);
+    },
+    stop : function(){
+        clearInterval(this.interval);
+    }
+}
+
+//function which counts what frame the game is on
+function intervalcounter(x) {
+    if ((gameFrame.frameFlag / x) % 1 == 0) {return true;}
+    return false;
+}
+
+//component class, alls to build out either text or images
+function component (width, height, color, x, y, type){
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    if(type=="image"){
+        this.image = new Image();
+        this.image.src = color;
+    }
+    this.update = function(){
+        ctx = gameFrame.context;
+        if(this.type == "text"){
+            ctx.font = this.width + " " + this.height;
+            ctx.fillStyle = color;
+            ctx.fillText(this.text, this.x, this.y);
+        } else if(type == "image"){
+            ctx.drawImage(this.image, this.x, this.y,this.width, this.height);
+        }
+        else{
+             ctx.fillStyle = color;
+             ctx.fillRect(this.x, this.y, this.width, this.height);   
+        }
+    }//handles movement
+    this.move = function(){
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }//calculates collision
+    this.crashWith = function(otherobj) {
+        var firstleft = this.x;
+        var firstright = this.x + (this.width);
+        var firsttop = this.y;
+        var firstbottom = this.y + (this.height);
+        var secondleft = otherobj.x;
+        var secondright = otherobj.x + (otherobj.width);
+        var secondtop = otherobj.y;
+        var secondbottom = otherobj.y + (otherobj.height);
+        var crash = true;
+        if ((firstbottom < secondtop) ||
+        (firsttop > secondbottom) ||
+        (firstright < secondleft) ||
+        (firstleft > secondright)) {
+            crash = false;
+        }
+        return crash;
+    }
+}
+
+//function to update the game area, also controls collision, if collision occurs game stops
+function updateGameFrame(){
+    var x, y;
+    for (i = 0; i < collisionObject.length; i+=1){
+        if (gmeRocket.crashWith(collisionObject[i])) {
+            gameFrame.stop();
+            return;
+        } 
+    }
+    gameFrame.clear();
+    gameFrame.frameFlag += 1;
+    //builds out the collision objects and handles the creation of gaps between them
+    if (gameFrame.frameFlag == 1 || intervalcounter(150)){
+        x = gameFrame.canvas.width;
+        upperValue = 400;
+        lowerValue = 10;
+        height = Math.floor(Math.random()*(upperValue-lowerValue+1)+lowerValue);
+        upperGap = 400;
+        lowerGap = 200;
+        gap = Math.floor(Math.random()*(upperGap-lowerGap+1)+lowerGap);
+        collisionObject.push(new component(height, 20, "red", 0, 800));
+        collisionObject.push(new component(x - height - gap, 20, "red", height + gap, 800));
+    }
+    for ( i = 0; i < collisionObject.length; i += 1){
+        collisionObject[i].y += -1;
+        collisionObject[i].update();
+    }
+    scoreBoard.text = "Score: " + gameFrame.frameFlag;
+    scoreBoard.update();
+    gmeRocket.move();
+    gmeRocket.update();
+
+}
+
+//sound class for allowing sound on movement
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function(){
+    this.sound.volume = .01;
+    this.sound.play();
+  }
+  this.stop = function(){
+    this.sound.pause();
+  }
+}
+
+//Four following functions handle what the player character must do on the canvas if called, Fifth function handles what happens when nothing is being pressed
+function upwards(){
+    gmeRocket.image.src = "/images/rocketmoving.png";
+    gmeRocket.speedY -= 2;
+    rocketSound.play();
+}
+function downwards(){
+    gmeRocket.image.src = "/images/rocketmoving.png";
+    gmeRocket.speedY += 2;
+    rocketSound.play();
+}
+function lefthand(){
+    gmeRocket.image.src = "/images/rocketmoving.png";
+    gmeRocket.speedX -= 2;
+    rocketSound.play();
+}
+function righthand(){
+    gmeRocket.image.src = "/images/rocketmoving.png";
+    gmeRocket.speedX += 2;
+    rocketSound.play();
+} 
+function pause(){
+    gmeRocket.image.src = "/images/rocketsitting.png";
+    gmeRocket.speedX = 0;
+    gmeRocket.speedY = 0;
+    rocketSound.stop();
+}
+</script>
+ 
 <!-- buttons for movement on mouse down calls the functions for movement, on mouseup calls the function for stopping the character-->
 <!-- last button reloads the page to restart the game-->
 <div style = "text-align: center">
-<!--<button onmousedown="upwards()" onmouseup="pause()">Up</button><br>
+<button onmousedown="upwards()" onmouseup="pause()">Up</button><br>
 <button onmousedown="lefthand()" onmouseup="pause()">Left</button>
 <button onmousedown="righthand()" onmouseup="pause()">Right</button><br>
 <button onmousedown="downwards()" onmouseup="pause()">Down</button><br><br>
-<button onclick="window.location.reload();">Play Again!</button>-->
+<button onclick="window.location.reload();">Play Again!</button>
 </div>
 <p>A preview of the game, still a WIP!</p>
+   
     
 </body>  
 
