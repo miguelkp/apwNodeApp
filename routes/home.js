@@ -34,6 +34,11 @@ router.get("/game", function (req, res) {
    res.render("game");
 })
 
+//Leaderboard Page
+router.get("/leaderboard", function (req, res) {
+   res.render("leaderboard");
+})
+
 // Logout Function via Passport JS
 // Upon clicking the "logout" function
 router.get("/logout", function(req, res){ 
